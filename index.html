@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento de Ações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .buy {
+            color: green;
+        }
+        .sell {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monitoramento de Ações para Day Trade</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ação</th>
+                <th>Preço Atual</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="stocks-table">
+            <!-- Linhas das ações serão inseridas aqui pelo JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para atualizar a tabela com dados das ações
+        function updateTable(stocks) {
+            const tableBody = document.getElementById('stocks-table');
+            tableBody.innerHTML = ''; // Limpa a tabela
+
+            stocks.forEach(stock => {
+                const row = document.createElement('tr');
+                const nameCell = document.createElement('td');
+                const priceCell = document.createElement('td');
+                const statusCell = document.createElement('td');
+
+                nameCell.textContent = stock.name;
+                priceCell.textContent = stock.price.toFixed(2);
+                statusCell.textContent = stock.status;
+                statusCell.classList.add(stock.status === 'Comprar' ? 'buy' : 'sell');
+
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
+                row.appendChild(statusCell);
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Exemplo de dados de ações
+        const exampleStocks = [
+            { name: 'AAPL', price: 150.34, status: 'Comprar' },
+            { name: 'GOOGL', price: 2734.87, status: 'Vender' },
+            { name: 'AMZN', price: 3478.05, status: 'Comprar' },
+        ];
+
+        // Atualiza a tabela com os dados de exemplo
+        updateTable(exampleStocks);
+
+        // Aqui você iria adicionar a lógica para buscar os dados em tempo real
+    </script>
+</body>
+</html>
