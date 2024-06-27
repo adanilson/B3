@@ -92,12 +92,13 @@
     <script>
         const apiKey = 'GFY7TCO682NLRQW0';
         const symbols = ['AAPL', 'GOOGL', 'AMZN', 'MSFT', 'TSLA']; // Adicione os símbolos das ações que você deseja monitorar
+        const previousPrices = {}; // Objeto para armazenar os preços anteriores
 
         function getStockPrice(symbol, callback) {
             $.getJSON(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=1min&apikey=${apiKey}`, function(data) {
                 const timeSeries = data['Time Series (1min)'];
                 const latestTime = Object.keys(timeSeries)[0];
-                const latestPrice = timeSeries[latestTime]['1. open'];
+                const latestPrice = parseFloat(timeSeries[latestTime]['1. open']);
                 callback(symbol, latestPrice);
             }).fail(function() {
                 callback(symbol, null);
@@ -108,33 +109,43 @@
             const highStocks = [];
             const lowStocks = [];
 
+            $('#stocks-table-body').empty(); // Limpa a tabela antes de atualizar
+
+            let requestsCompleted = 0;
+
             symbols.forEach(symbol => {
                 getStockPrice(symbol, function(symbol, price) {
                     if (price) {
-                        const status = (Math.random() > 0.5) ? 'Comprar' : 'Vender'; // Exemplo de lógica de compra/venda
-                        const row = `<tr><td>${symbol}</td><td>${price}</td><td class="highlight ${status === 'Comprar' ? 'buy' : 'sell'}">${status}</td></tr>`;
-                        $('#stocks-table-body').append(row);
-
-                        if (status === 'Comprar') {
-                            highStocks.push(`${symbol} - ${price}`);
-                        } else {
-                            lowStocks.push(`${symbol} - ${price}`);
+                        let status = 'Estável';
+                        if (previousPrices[symbol] !== undefined) {
+                            if (price > previousPrices[symbol]) {
+                                status = 'Vender';
+                                lowStocks.push(`${symbol} - ${price.toFixed(2)}`);
+                            } else if (price < previousPrices[symbol]) {
+                                status = 'Comprar';
+                                highStocks.push(`${symbol} - ${price.toFixed(2)}`);
+                            }
                         }
+                        previousPrices[symbol] = price;
+
+                        const row = `<tr><td>${symbol}</td><td>${price.toFixed(2)}</td><td class="highlight ${status === 'Comprar' ? 'buy' : 'sell'}">${status}</td></tr>`;
+                        $('#stocks-table-body').append(row);
+                    }
+
+                    requestsCompleted++;
+                    if (requestsCompleted === symbols.length) {
+                        $('#highlight-container').text('Atualizado com sucesso');
+
+                        const highStocksList = $('#high-stocks-list');
+                        const lowStocksList = $('#low-stocks-list');
+                        highStocksList.empty();
+                        lowStocksList.empty();
+
+                        highStocks.forEach(stock => highStocksList.append(`<li>${stock}</li>`));
+                        lowStocks.forEach(stock => lowStocksList.append(`<li>${stock}</li>`));
                     }
                 });
             });
-
-            setTimeout(() => {
-                $('#highlight-container').text('Atualizado com sucesso');
-
-                const highStocksList = $('#high-stocks-list');
-                const lowStocksList = $('#low-stocks-list');
-                highStocksList.empty();
-                lowStocksList.empty();
-
-                highStocks.forEach(stock => highStocksList.append(`<li>${stock}</li>`));
-                lowStocks.forEach(stock => lowStocksList.append(`<li>${stock}</li>`));
-            }, 5000); // Espera 5 segundos para garantir que todas as chamadas da API foram concluídas
         }
 
         $(document).ready(function() {
