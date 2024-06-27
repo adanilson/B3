@@ -57,50 +57,25 @@ function updateStockData() {
 }
 
 $(document).ready(function() {
-    new TradingView.widget({
+    const widgetSettings = {
+        "showChart": false,
+        "locale": 'br',
         "width": "100%",
-        "height": 500,
-        "symbol": "NASDAQ:AAPL", // Use um símbolo que você sabe que está disponível
-        "interval": "D",
-        "timezone": "Etc/UTC",
-        "theme": "light",
-        "style": "1",
-        "locale": "pt",
-        "toolbar_bg": "#f1f3f6",
-        "enable_publishing": false,
-        "withdateranges": true,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": true,
-        "details": true,
-        "hotlist": true,
-        "calendar": true,
-        "news": ["headlines"],
-        "container_id": "chart-container"
-    });
-
-    new TradingView.widget({
-        "container_id": "tv-adv-widget-home",
-        "width": "100%",
-        "height": 450,
-        "symbol": "IBOV",
-        "interval": "1",
-        "timezone": "exchange",
-        "theme": "White",
-        "style": "3",
-        "toolbar_bg": "#f1f3f6",
-        "withdateranges": true,
-        "hide_side_toolbar": false,
-        "details": false,
-        "allow_symbol_change": true,
-        "hideideas": true,
-        "widgetbar_width": 300,
-        "show_popup_button": false,
-        "popup_width": "100%",
-        "popup_height": "450px",
-        "editablewatchlist": true,
+        "height": "400",
         "customer": "bovespa",
-        "locale": "br"
-    });
+        "largeChartUrl": window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1),
+        "tabs": [
+            {"title":"Maiores altas", "symbols": [{"s":"BMFBOVESPA:IBOV", "d":"IBOV"}]},
+            {"title":"Maiores baixas", "symbols": [{"s":"BMFBOVESPA:IBOV", "d":"IBOV"}]},
+            {"title":"Mais negociadas", "symbols": [{"s":"BMFBOVESPA:IBOV", "d":"IBOV"}]}
+        ]
+    };
+
+    const script = document.createElement('script');
+    script.setAttribute('src', 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js');
+    script.setAttribute('async', "");
+    script.innerHTML = JSON.stringify(widgetSettings);
+    document.getElementById("chart-container").appendChild(script);
 
     setInterval(updateStockData, 60000); // Atualiza a cada 60 segundos
     updateStockData(); // Atualiza ao carregar a página
