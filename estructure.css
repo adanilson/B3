@@ -1,3 +1,97 @@
-seu_projeto/
-├── index.html
-└── main.js
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin: 20px;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+#chart-container {
+    width: 80%;
+    height: 500px;
+    margin: 20px;
+}
+
+#highlight-container {
+    width: 80%;
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.highlight {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.highlight.buy {
+    color: green;
+}
+
+.highlight.sell {
+    color: red;
+}
+
+.highlight.stable {
+    color: grey;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    #chart-container {
+        width: 100%;
+    }
+}
+
+/* Estilos para tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+    table {
+        width: 90%;
+    }
+
+    #chart-container {
+        width: 90%;
+    }
+}
+
+/* Estilos para desktops */
+@media (min-width: 1025px) {
+    table {
+        width: 80%;
+    }
+
+    #chart-container {
+        width: 80%;
+    }
+}
